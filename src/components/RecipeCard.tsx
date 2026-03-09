@@ -1,7 +1,8 @@
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { Image as ImageIcon } from "lucide-react";
+import { Image as ImageIcon, X, Edit2 } from "lucide-react";
 import { Recipe } from "../types";
+import { Button } from "./ui/button";
 
 export interface RecipeCardProps {
     recipe: Recipe;
