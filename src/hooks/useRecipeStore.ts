@@ -50,21 +50,24 @@ export function useRecipeStore() {
     };
 
     const addTag = (tagName: string) => {
-        const trimmed = tagName.trim().toLowerCase();
+        const trimmed = tagName.trim();
         if (!trimmed) return;
+        const lowerTrimmed = trimmed.toLowerCase();
+
         setTags((prev) => {
-            if (prev.includes(trimmed)) return prev;
+            if (prev.some(t => t.toLowerCase() === lowerTrimmed)) return prev;
             return [...prev, trimmed];
         });
     };
 
     const deleteTag = (tagName: string) => {
-        setTags((prev) => prev.filter((t) => t !== tagName));
+        const lowerName = tagName.toLowerCase();
+        setTags((prev) => prev.filter((t) => t.toLowerCase() !== lowerName));
         // Also remove this tag from all existing recipes
         setRecipes((prev) =>
             prev.map((recipe) => ({
                 ...recipe,
-                tags: recipe.tags ? recipe.tags.filter((t) => t !== tagName) : [],
+                tags: recipe.tags ? recipe.tags.filter((t) => t.toLowerCase() !== lowerName) : [],
             }))
         );
     };
