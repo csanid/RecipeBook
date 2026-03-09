@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { X, Edit2, Link as LinkIcon, Image as ImageIcon, Check, Loader2, AlertCircle } from "lucide-react";
+import { X, Edit2, Link as LinkIcon, Image as ImageIcon, Check, Loader2, AlertCircle, ArrowRight } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -23,6 +23,7 @@ export interface RecipeModalProps {
     onSave: (recipe: Recipe | Omit<Recipe, 'id' | 'createdAt'>) => void;
     availableTags: Tag[];
     onDelete: (id: string) => void;
+    addTag: (tag: Tag) => void;
 }
 
 export function RecipeModal({
@@ -31,17 +32,21 @@ export function RecipeModal({
     recipe,
     onSave,
     availableTags,
-    onDelete
+    onDelete,
+    addTag
 }: RecipeModalProps) {
     const isAddMode = !recipe;
     const [isEditMode, setIsEditMode] = useState(isAddMode);
     const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     // Form State
     const [link, setLink] = useState("");
     const [name, setName] = useState("");
     const [image, setImage] = useState("");
     const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+    const [tagInput, setTagInput] = useState("");
+    const [notes, setNotes] = useState("");
 
     // Fetch State
     const [isFetchingOg, setIsFetchingOg] = useState(false);
@@ -54,12 +59,16 @@ export function RecipeModal({
                 setName(recipe.name || "");
                 setImage(recipe.image || "");
                 setSelectedTags(recipe.tags || []);
+                setTagInput("");
+                setNotes(recipe.notes || "");
                 setIsEditMode(false);
             } else {
                 setLink("");
                 setName("");
                 setImage("");
                 setSelectedTags([]);
+                setTagInput("");
+                setNotes("");
                 setIsEditMode(true);
             }
             setOgError("");
@@ -70,13 +79,14 @@ export function RecipeModal({
     const hasUnsavedChanges = () => {
         if (!isEditMode) return false;
         if (isAddMode) {
-            return link !== "" || name !== "" || image !== "" || selectedTags.length > 0;
+            return link !== "" || name !== "" || image !== "" || selectedTags.length > 0 || notes !== "";
         } else {
             return (
                 link !== (recipe.link || "") ||
                 name !== (recipe.name || "") ||
                 image !== (recipe.image || "") ||
-                JSON.stringify(selectedTags) !== JSON.stringify(recipe.tags || [])
+                JSON.stringify(selectedTags) !== JSON.stringify(recipe.tags || []) ||
+                notes !== (recipe.notes || "")
             );
         }
     };
@@ -96,10 +106,39 @@ export function RecipeModal({
 
     const toggleTag = (tag: Tag) => {
         if (!isEditMode) return;
-        if (selectedTags.includes(tag)) {
-            setSelectedTags(selectedTags.filter(t => t !== tag));
+        const lowerTag = tag.toLowerCase();
+        if (selectedTags.some(t => t.toLowerCase() === lowerTag)) {
+            setSelectedTags(selectedTags.filter(t => t.toLowerCase() !== lowerTag));
         } else {
             setSelectedTags([...selectedTags, tag]);
+        }
+    };
+
+    const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const trimmed = tagInput.trim();
+            if (trimmed) {
+                const lowerTrimmed = trimmed.toLowerCase();
+                // Check if it exists in available tags natively
+                const existingAvailableTag = availableTags.find(t => t.toLowerCase() === lowerTrimmed);
+
+                // If it exists in available tags, use the exact available tag case,
+                // otherwise use the user's typed case.
+                const tagToAdd = existingAvailableTag || trimmed;
+
+                // Add to globally available tags if it's new
+                if (!existingAvailableTag) {
+                    addTag(tagToAdd);
+                }
+
+                // Append to selected tags if not already there
+                if (!selectedTags.some(t => t.toLowerCase() === lowerTrimmed)) {
+                    setSelectedTags([...selectedTags, tagToAdd]);
+                }
+
+                setTagInput("");
+            }
         }
     };
 
@@ -115,6 +154,7 @@ export function RecipeModal({
             name: name.trim(),
             image: image.trim(),
             tags: selectedTags,
+            notes: notes.trim(),
         });
 
         if (isAddMode) {
@@ -167,7 +207,7 @@ export function RecipeModal({
     return (
         <>
             <Dialog open={isOpen} onOpenChange={handleCloseAttempt}>
-                <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden bg-background">
+                <DialogContent showCloseButton={false} className="sm:max-w-[600px] p-0 overflow-y-auto max-h-[90vh] bg-background">
                     <div className="relative">
                         {/* Image Header Area */}
                         <div className={`w-full bg-neutral-100 dark:bg-neutral-800 relative flex items-center justify-center ${image ? 'h-64' : 'h-32'}`}>
@@ -178,9 +218,22 @@ export function RecipeModal({
                             )}
 
                             {!isEditMode && (
-                                <div className="absolute top-4 right-10">
-                                    <Button size="icon" variant="secondary" onClick={(e) => { e.stopPropagation(); setIsEditMode(true); }} className="rounded-full shadow-md bg-white/80 dark:bg-black/80 hover:bg-white dark:hover:bg-black text-neutral-900 dark:text-neutral-100 backdrop-blur-sm">
+                                <div className="absolute top-4 right-4 flex gap-2">
+                                    <Button
+                                        size="icon"
+                                        variant="secondary"
+                                        onClick={(e) => { e.stopPropagation(); setIsEditMode(true); }}
+                                        className="rounded-full shadow-md bg-white/80 dark:bg-black/80 hover:bg-white dark:hover:bg-black text-neutral-900 dark:text-neutral-100 backdrop-blur-sm"
+                                    >
                                         <Edit2 className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                        size="icon"
+                                        variant="secondary"
+                                        onClick={(e) => { e.stopPropagation(); handleCloseAttempt(); }}
+                                        className="rounded-full shadow-md bg-white/80 dark:bg-black/80 hover:bg-white dark:hover:bg-black text-neutral-900 dark:text-neutral-100 backdrop-blur-sm"
+                                    >
+                                        <X className="w-4 h-4" />
                                     </Button>
                                 </div>
                             )}
@@ -228,17 +281,25 @@ export function RecipeModal({
                                                 <Input
                                                     value={link}
                                                     onChange={(e) => setLink(e.target.value)}
-                                                    onBlur={fetchOpenGraphData}
                                                     placeholder="https://..."
-                                                    className="pl-9"
+                                                    className="pl-9 pr-10"
                                                 />
-                                                {isFetchingOg && (
-                                                    <div className="absolute right-3 top-1/2 -translate-y-1/2" id="loading-spinner" data-cy="loading-spinner">
-                                                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                                                    </div>
-                                                )}
+                                                <Button
+                                                    size="icon-sm"
+                                                    variant="secondary"
+                                                    className="absolute right-1 top-1/2 -translate-y-1/2 rounded-md"
+                                                    onClick={fetchOpenGraphData}
+                                                    disabled={isFetchingOg || !link}
+                                                    data-cy="fetch-og-btn"
+                                                >
+                                                    {isFetchingOg ? (
+                                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                                    ) : (
+                                                        <ArrowRight className="h-4 w-4" />
+                                                    )}
+                                                </Button>
                                             </div>
-                                            <p className="text-xs text-muted-foreground">Paste a link and click outside to autofill details.</p>
+                                            <p className="text-xs text-muted-foreground">Paste a link and click the arrow to autofill details.</p>
                                         </>
                                     ) : (
                                         link && (
@@ -268,26 +329,65 @@ export function RecipeModal({
                                 {/* Tags */}
                                 <div className="space-y-2 pt-2">
                                     <label className="text-sm font-medium text-muted-foreground">Tags</label>
+
+                                    {isEditMode && (
+                                        <div className="mb-3">
+                                            <Input
+                                                value={tagInput}
+                                                onChange={(e) => setTagInput(e.target.value)}
+                                                onKeyDown={handleTagInputKeyDown}
+                                                placeholder="Type a tag and press Enter..."
+                                                className="h-9"
+                                            />
+                                            <p className="text-xs text-muted-foreground mt-1 text-right">
+                                                Press Enter to add tag. New tags will be saved automatically.
+                                            </p>
+                                        </div>
+                                    )}
+
                                     <div className="flex flex-wrap gap-2">
                                         {isEditMode ? (
-                                            availableTags.length > 0 ? (
-                                                availableTags.map(tag => (
-                                                    <Badge
-                                                        key={tag}
-                                                        variant={selectedTags.includes(tag) ? "default" : "outline"}
-                                                        className="cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors py-1"
-                                                        onClick={() => toggleTag(tag)}
-                                                    >
-                                                        {tag}
-                                                    </Badge>
-                                                ))
+                                            selectedTags.length > 0 || availableTags.length > 0 ? (
+                                                <>
+                                                    {/* Show selected tags first with an X to remove */}
+                                                    {selectedTags.map(tag => (
+                                                        <Badge
+                                                            key={`selected-${tag}`}
+                                                            variant="default"
+                                                            className="cursor-pointer hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors py-1 flex items-center gap-1"
+                                                            onClick={() => toggleTag(tag)}
+                                                        >
+                                                            {tag}
+                                                            <button
+                                                                className="hover:bg-neutral-600 dark:hover:bg-neutral-300 rounded-full p-0.5 inline-flex"
+                                                                onClick={(e) => { e.stopPropagation(); toggleTag(tag); }}
+                                                            >
+                                                                <X className="w-3 h-3" />
+                                                            </button>
+                                                        </Badge>
+                                                    ))}
+                                                    {/* Show available unselected tags next */}
+                                                    {availableTags
+                                                        .filter(tag => !selectedTags.some(st => st.toLowerCase() === tag.toLowerCase()))
+                                                        .filter(tag => tagInput ? tag.toLowerCase().includes(tagInput.toLowerCase()) : true)
+                                                        .map(tag => (
+                                                            <Badge
+                                                                key={`available-${tag}`}
+                                                                variant="outline"
+                                                                className="cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors py-1"
+                                                                onClick={() => toggleTag(tag)}
+                                                            >
+                                                                + {tag}
+                                                            </Badge>
+                                                        ))}
+                                                </>
                                             ) : (
-                                                <p className="text-sm text-muted-foreground italic">No tags available. Add some in the main menu.</p>
+                                                <p className="text-sm text-muted-foreground italic">Type above to create your first tag.</p>
                                             )
                                         ) : (
                                             selectedTags.length > 0 ? (
                                                 selectedTags.map(tag => (
-                                                    <Badge key={tag} variant="secondary" className="py-1">
+                                                    <Badge key={`view-${tag}`} variant="secondary" className="py-1">
                                                         {tag}
                                                     </Badge>
                                                 ))
@@ -298,13 +398,37 @@ export function RecipeModal({
                                     </div>
                                 </div>
 
+                                {/* Notes */}
+                                <div className="space-y-1">
+                                    {isEditMode ? (
+                                        <>
+                                            <label className="text-sm font-medium text-muted-foreground">Notes</label>
+                                            <textarea
+                                                className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+                                                placeholder="Add any notes, tweaks, or thoughts..."
+                                                value={notes}
+                                                onChange={(e) => setNotes(e.target.value)}
+                                            />
+                                        </>
+                                    ) : (
+                                        notes && (
+                                            <>
+                                                <label className="text-sm font-medium text-muted-foreground">Notes</label>
+                                                <div className="bg-neutral-50 dark:bg-neutral-900 border rounded-md p-3 text-sm whitespace-pre-wrap">
+                                                    {notes}
+                                                </div>
+                                            </>
+                                        )
+                                    )}
+                                </div>
+
                             </div>
 
                             {/* Footer Actions */}
                             {isEditMode && (
                                 <div className="flex justify-between items-center mt-8 pt-4 border-t">
                                     {recipe && !isAddMode ? (
-                                        <Button variant="destructive" onClick={() => { onDelete(recipe.id); onClose(); }} className="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900 border-red-200 dark:border-red-900">
+                                        <Button variant="destructive" onClick={() => setShowDeleteDialog(true)} className="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900 border-red-200 dark:border-red-900">
                                             Delete Recipe
                                         </Button>
                                     ) : <div></div>}
@@ -333,6 +457,22 @@ export function RecipeModal({
                         <AlertDialogCancel onClick={() => setShowUnsavedDialog(false)}>Keep Editing</AlertDialogCancel>
                         <AlertDialogAction onClick={confirmClose} className="bg-red-500 hover:bg-red-600">
                             Discard Changes
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This will permanently delete "{name || 'this recipe'}". This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setShowDeleteDialog(false)}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => { onDelete(recipe!.id); setShowDeleteDialog(false); onClose(); }} className="bg-red-500 hover:bg-red-600">
+                            Delete Recipe
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

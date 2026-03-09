@@ -96,6 +96,7 @@ function App() {
         onSave={handleSaveRecipe}
         availableTags={tags}
         onDelete={deleteRecipe}
+        addTag={addTag}
       />
     </div>
   );
