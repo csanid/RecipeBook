@@ -1,0 +1,7 @@
+{
+  "hybridGraph": {
+    "title": "Test Recipe from URL",
+    "image": "https://example.com/og-image.jpg",
+    "description": "A delicious test recipe fetched via OpenGraph autofill."
+  }
+}

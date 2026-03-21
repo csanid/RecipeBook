@@ -7,7 +7,7 @@ export function Header() {
                 <div className="bg-primary text-primary-foreground p-2 rounded-lg">
                     <BookOpen className="w-6 h-6" />
                 </div>
-                <h1 className="text-2xl font-bold tracking-tight">My Recipe Book</h1>
+                <h1 className="text-2xl font-bold tracking-tight" data-testid="app-title">My Recipe Book</h1>
             </div>
         </header>
     );

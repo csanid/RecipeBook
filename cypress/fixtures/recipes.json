@@ -1,0 +1,29 @@
+[
+  {
+    "id": "test-recipe-1",
+    "createdAt": 1704067200000,
+    "name": "Spaghetti Carbonara",
+    "link": "https://example.com/carbonara",
+    "image": "https://example.com/carbonara.jpg",
+    "tags": ["Italian", "Pasta"],
+    "notes": "Classic Italian dish with eggs, guanciale and pecorino."
+  },
+  {
+    "id": "test-recipe-2",
+    "createdAt": 1704153600000,
+    "name": "Chocolate Chip Cookies",
+    "link": "https://example.com/cookies",
+    "image": "https://example.com/cookies.jpg",
+    "tags": ["Dessert", "Baking"],
+    "notes": "Chewy and crisp at the edges."
+  },
+  {
+    "id": "test-recipe-3",
+    "createdAt": 1704240000000,
+    "name": "Vegetable Stir Fry",
+    "link": "https://example.com/stirfry",
+    "image": "",
+    "tags": ["Vegetarian", "Quick"],
+    "notes": ""
+  }
+]
