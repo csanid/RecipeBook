@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, X, Edit2, Check } from "lucide-react";
+import { Plus, X, Edit2, Check, AlertCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
@@ -34,6 +34,7 @@ export function TagManager({
     const [isEditing, setIsEditing] = useState(false);
     const [newTagStr, setNewTagStr] = useState("");
     const [tagToDelete, setTagToDelete] = useState<Tag | null>(null);
+    const [tagError, setTagError] = useState("");
 
     const toggleTagSelection = (tag: Tag) => {
         if (isEditing) return;
@@ -46,10 +47,17 @@ export function TagManager({
 
     const handleAddTag = (e: React.FormEvent) => {
         e.preventDefault();
-        if (newTagStr.trim()) {
-            addTag(newTagStr.trim());
-            setNewTagStr("");
+        if (!newTagStr.trim()) {
+            setTagError("Enter one or more words to save a tag.");
+            return;
         }
+        if (tags.some(t => t.toLowerCase() === newTagStr.trim().toLowerCase())) {
+            setTagError("This tag already exists.");
+            return;
+        }
+        addTag(newTagStr.trim());
+        setNewTagStr("");
+        setTagError("");
     };
 
     const confirmDelete = () => {
@@ -72,7 +80,7 @@ export function TagManager({
                     <Button
                         variant={isEditing ? "default" : "outline"}
                         size="sm"
-                        onClick={() => setIsEditing(!isEditing)}
+                        onClick={() => { setIsEditing(!isEditing); setTagError(""); setNewTagStr(""); }}
                         className={`gap-2 transition-colors ${!isEditing ? "hover:bg-neutral-100 dark:hover:bg-neutral-800" : ""}`}
                     >
                         {isEditing ? <><Check className="w-4 h-4" /> Done Editing</> : <><Edit2 className="w-4 h-4" /> Manage Tags</>}
@@ -113,18 +121,26 @@ export function TagManager({
                 )}
 
                 {isEditing && (
-                    <form onSubmit={handleAddTag} className="mt-4 flex max-w-sm gap-2">
-                        <Input
-                            type="text"
-                            placeholder="New tag..."
-                            value={newTagStr}
-                            onChange={(e) => setNewTagStr(e.target.value)}
-                            className="h-9 w-40"
-                        />
-                        <Button type="submit" size="sm" variant="secondary" className="h-9 px-3">
-                            <Plus className="w-4 h-4" />
-                        </Button>
-                    </form>
+                    <div className="mt-4 max-w-sm">
+                        <form onSubmit={handleAddTag} className="flex gap-2">
+                            <Input
+                                type="text"
+                                placeholder="New tag..."
+                                value={newTagStr}
+                                onChange={(e) => { setNewTagStr(e.target.value); setTagError(""); }}
+                                className="h-9 w-40"
+                            />
+                            <Button type="submit" size="sm" variant="secondary" className="h-9 px-3">
+                                <Plus className="w-4 h-4" />
+                            </Button>
+                        </form>
+                        {tagError && (
+                            <p className="text-sm text-destructive flex items-center gap-1.5 mt-1" data-testid="tag-error">
+                                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                                {tagError}
+                            </p>
+                        )}
+                    </div>
                 )}
             </CardContent>
 

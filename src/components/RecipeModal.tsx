@@ -52,6 +52,12 @@ export function RecipeModal({
     const [isFetchingOg, setIsFetchingOg] = useState(false);
     const [ogError, setOgError] = useState("");
 
+    // Validation State
+    const [linkError, setLinkError] = useState("");
+    const [imageUrlError, setImageUrlError] = useState("");
+    const [tagError, setTagError] = useState("");
+    const [imageLoadFailed, setImageLoadFailed] = useState(false);
+
     useEffect(() => {
         if (isOpen) {
             if (recipe) {
@@ -73,6 +79,10 @@ export function RecipeModal({
             }
             setOgError("");
             setIsFetchingOg(false);
+            setLinkError("");
+            setImageUrlError("");
+            setTagError("");
+            setImageLoadFailed(false);
         }
     }, [isOpen, recipe]);
 
@@ -120,6 +130,12 @@ export function RecipeModal({
             const trimmed = tagInput.trim();
             if (trimmed) {
                 const lowerTrimmed = trimmed.toLowerCase();
+
+                if (selectedTags.some(t => t.toLowerCase() === lowerTrimmed)) {
+                    setTagError("This tag already exists.");
+                    return;
+                }
+
                 // Check if it exists in available tags natively
                 const existingAvailableTag = availableTags.find(t => t.toLowerCase() === lowerTrimmed);
 
@@ -132,12 +148,9 @@ export function RecipeModal({
                     addTag(tagToAdd);
                 }
 
-                // Append to selected tags if not already there
-                if (!selectedTags.some(t => t.toLowerCase() === lowerTrimmed)) {
-                    setSelectedTags([...selectedTags, tagToAdd]);
-                }
-
+                setSelectedTags([...selectedTags, tagToAdd]);
                 setTagInput("");
+                setTagError("");
             }
         }
     };
@@ -147,6 +160,7 @@ export function RecipeModal({
             setOgError("Recipe name is required.");
             return;
         }
+        if (linkError || imageUrlError || tagError) return;
 
         onSave({
             ...(recipe || {}),
@@ -167,9 +181,6 @@ export function RecipeModal({
     const fetchOpenGraphData = async () => {
         if (!link || !link.startsWith("http")) return;
 
-        // Only fetch if name and image are empty
-        if (name && image) return;
-
         setIsFetchingOg(true);
         setOgError("");
 
@@ -189,12 +200,8 @@ export function RecipeModal({
             const data = await res.json();
 
             if (data.hybridGraph) {
-                if (!name && data.hybridGraph.title) {
-                    setName(data.hybridGraph.title);
-                }
-                if (!image && data.hybridGraph.image) {
-                    setImage(data.hybridGraph.image);
-                }
+                setName(data.hybridGraph.title);
+                setImage(data.hybridGraph.image);
             }
         } catch (err) {
             console.error(err);
@@ -210,9 +217,14 @@ export function RecipeModal({
                 <DialogContent showCloseButton={false} className="sm:max-w-[600px] p-0 overflow-y-auto max-h-[90vh] bg-background">
                     <div className="relative">
                         {/* Image Header Area */}
-                        <div className={`w-full bg-neutral-100 dark:bg-neutral-800 relative flex items-center justify-center ${image ? 'h-64' : 'h-32'}`}>
-                            {image ? (
-                                <img src={image} alt={name || 'Recipe'} className="w-full h-full object-cover" />
+                        <div className={`w-full bg-neutral-100 dark:bg-neutral-800 relative flex items-center justify-center ${image && !imageLoadFailed ? 'h-64' : 'h-32'}`}>
+                            {image && !imageLoadFailed ? (
+                                <img
+                                    src={image}
+                                    alt={name || 'Recipe'}
+                                    className="w-full h-full object-cover"
+                                    onError={() => setImageLoadFailed(true)}
+                                />
                             ) : (
                                 <ImageIcon className="w-12 h-12 text-neutral-300 dark:text-neutral-700" />
                             )}
@@ -280,7 +292,10 @@ export function RecipeModal({
                                                 <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                                 <Input
                                                     value={link}
-                                                    onChange={(e) => setLink(e.target.value)}
+                                                    onChange={(e) => { setLink(e.target.value); setLinkError(""); }}
+                                                    onBlur={() => {
+                                                        if (link && !link.startsWith("http")) setLinkError("URL must start with http:// or https://");
+                                                    }}
                                                     placeholder="https://..."
                                                     className="pl-9 pr-10"
                                                 />
@@ -299,7 +314,14 @@ export function RecipeModal({
                                                     )}
                                                 </Button>
                                             </div>
-                                            <p className="text-xs text-muted-foreground">Paste a link and click the arrow to autofill details.</p>
+                                            {linkError ? (
+                                                <p className="text-sm text-destructive flex items-center gap-1.5 mt-1" data-testid="link-error">
+                                                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                                                    {linkError}
+                                                </p>
+                                            ) : (
+                                                <p className="text-xs text-muted-foreground">Paste a link and click the arrow to autofill details.</p>
+                                            )}
                                         </>
                                     ) : (
                                         link && (
@@ -318,11 +340,20 @@ export function RecipeModal({
                                             <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                             <Input
                                                 value={image}
-                                                onChange={(e) => setImage(e.target.value)}
+                                                onChange={(e) => { setImage(e.target.value); setImageUrlError(""); setImageLoadFailed(false); }}
+                                                onBlur={() => {
+                                                    if (image && !image.startsWith("http")) setImageUrlError("URL must start with http:// or https://");
+                                                }}
                                                 placeholder="https://.../image.jpg"
                                                 className="pl-9"
                                             />
                                         </div>
+                                        {imageUrlError && (
+                                            <p className="text-sm text-destructive flex items-center gap-1.5 mt-1" data-testid="image-url-error">
+                                                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                                                {imageUrlError}
+                                            </p>
+                                        )}
                                     </div>
                                 )}
 
@@ -334,14 +365,21 @@ export function RecipeModal({
                                         <div className="mb-3">
                                             <Input
                                                 value={tagInput}
-                                                onChange={(e) => setTagInput(e.target.value)}
+                                                onChange={(e) => { setTagInput(e.target.value); setTagError(""); }}
                                                 onKeyDown={handleTagInputKeyDown}
                                                 placeholder="Type a tag and press Enter..."
                                                 className="h-9"
                                             />
-                                            <p className="text-xs text-muted-foreground mt-1 text-right">
-                                                Press Enter to add tag. New tags will be saved automatically.
-                                            </p>
+                                            {tagError ? (
+                                                <p className="text-sm text-destructive flex items-center gap-1.5 mt-1" data-testid="modal-tag-error">
+                                                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                                                    {tagError}
+                                                </p>
+                                            ) : (
+                                                <p className="text-xs text-muted-foreground mt-1 text-right">
+                                                    Press Enter to add tag. New tags will be saved automatically.
+                                                </p>
+                                            )}
                                         </div>
                                     )}
 
