@@ -163,7 +163,8 @@ export function RecipeModal({
         if (linkError || imageUrlError || tagError) return;
 
         onSave({
-            ...(recipe || {}),
+            id: recipe?.id,
+            createdAt: recipe?.createdAt,
             link: link.trim(),
             name: name.trim(),
             image: image.trim(),
@@ -275,6 +276,7 @@ export function RecipeModal({
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
                                                 placeholder="e.g. Grandma's Apple Pie"
+                                                maxLength={80}
                                                 className="text-lg font-semibold"
                                             />
                                         </div>
@@ -367,6 +369,7 @@ export function RecipeModal({
                                                 value={tagInput}
                                                 onChange={(e) => { setTagInput(e.target.value); setTagError(""); }}
                                                 onKeyDown={handleTagInputKeyDown}
+                                                maxLength={40}
                                                 placeholder="Type a tag and press Enter..."
                                                 className="h-9"
                                             />
@@ -446,6 +449,7 @@ export function RecipeModal({
                                                 placeholder="Add any notes, tweaks, or thoughts..."
                                                 value={notes}
                                                 onChange={(e) => setNotes(e.target.value)}
+                                                maxLength={2500}
                                             />
                                         </>
                                     ) : (

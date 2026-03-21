@@ -128,6 +128,7 @@ export function TagManager({
                                 placeholder="New tag..."
                                 value={newTagStr}
                                 onChange={(e) => { setNewTagStr(e.target.value); setTagError(""); }}
+                                maxLength={40}
                                 className="h-9 w-40"
                             />
                             <Button type="submit" size="sm" variant="secondary" className="h-9 px-3">
