@@ -63,7 +63,7 @@ export function TagManager({
     };
 
     return (
-        <Card className="mb-8 overflow-hidden shadow-sm" data-cy="tags-container">
+        <Card className="mb-8 overflow-hidden shadow-sm" data-testid="tags-container">
             <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-lg font-semibold tracking-tight text-neutral-800 dark:text-neutral-200">
@@ -91,7 +91,7 @@ export function TagManager({
                                     variant={isSelected ? "default" : "secondary"}
                                     className={`text-sm py-1.5 px-3 cursor-pointer transition-all duration-200 shadow-sm ${!isEditing && !isSelected ? 'hover:bg-neutral-200 dark:hover:bg-neutral-800' : ''}`}
                                     onClick={() => toggleTagSelection(tag)}
-                                    data-cy="tag-pill"
+                                    data-testid="tag-pill"
                                 >
                                     {tag}
                                     {isEditing && (
@@ -101,7 +101,7 @@ export function TagManager({
                                                 setTagToDelete(tag);
                                             }}
                                             className="ml-2 hover:bg-red-100 dark:hover:bg-red-900 rounded-full p-0.5 transition-colors"
-                                            data-cy="remove-tag-chip"
+                                            data-testid="remove-tag-chip"
                                         >
                                             <X className="w-3 h-3 text-neutral-500 hover:text-red-500" />
                                         </button>

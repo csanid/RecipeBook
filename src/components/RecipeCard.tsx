@@ -1,8 +1,7 @@
-import { Card, CardContent } from "./ui/card";
-import { Badge } from "./ui/badge";
-import { Image as ImageIcon, X, Edit2 } from "lucide-react";
-import { Recipe } from "../types";
-import { Button } from "./ui/button";
+import {Card, CardContent} from "./ui/card";
+import {Badge} from "./ui/badge";
+import {Image as ImageIcon} from "lucide-react";
+import {Recipe} from "../types";
 
 export interface RecipeCardProps {
     recipe: Recipe;
@@ -14,7 +13,7 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
         <Card
             className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer group"
             onClick={onClick}
-            data-cy="recipe-card"
+            data-testid="recipe-card"
         >
             <div className="aspect-video w-full bg-neutral-100 dark:bg-neutral-800 relative flex items-center justify-center overflow-hidden">
                 {recipe.image ? (

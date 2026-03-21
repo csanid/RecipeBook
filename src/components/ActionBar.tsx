@@ -19,13 +19,13 @@ export function ActionBar({ searchQuery, setSearchQuery, onAddRecipe }: ActionBa
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10 w-full bg-background mt-0"
-                    data-cy="search-bar"
+                    data-testid="search-bar"
                 />
             </div>
             <Button
                 onClick={onAddRecipe}
                 className="w-full sm:w-auto flex items-center gap-2"
-                data-cy="add-recipe-btn"
+                data-testid="add-recipe-btn"
             >
                 <Plus className="w-4 h-4" /> Add Recipe
             </Button>

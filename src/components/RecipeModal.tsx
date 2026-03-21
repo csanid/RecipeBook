@@ -248,7 +248,7 @@ export function RecipeModal({
 
                                 {/* Error Message */}
                                 {ogError && (
-                                    <div className="bg-destructive/10 text-destructive text-sm px-4 py-3 rounded-lg flex items-center gap-2" data-cy="error-message">
+                                    <div className="bg-destructive/10 text-destructive text-sm px-4 py-3 rounded-lg flex items-center gap-2" data-testid="error-message">
                                         <AlertCircle className="w-4 h-4" />
                                         <span>{ogError}</span>
                                     </div>
@@ -290,7 +290,7 @@ export function RecipeModal({
                                                     className="absolute right-1 top-1/2 -translate-y-1/2 rounded-md"
                                                     onClick={fetchOpenGraphData}
                                                     disabled={isFetchingOg || !link}
-                                                    data-cy="fetch-og-btn"
+                                                    data-testid="fetch-og-btn"
                                                 >
                                                     {isFetchingOg ? (
                                                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -434,7 +434,7 @@ export function RecipeModal({
                                     ) : <div></div>}
                                     <div className="flex gap-2">
                                         <Button variant="outline" onClick={handleCloseAttempt}>Cancel</Button>
-                                        <Button onClick={handleSave} className="gap-2" data-cy="modal-save-btn">
+                                        <Button onClick={handleSave} className="gap-2" data-testid="modal-save-btn">
                                             <Check className="w-4 h-4" /> Save Recipe
                                         </Button>
                                     </div>
