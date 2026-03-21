@@ -201,8 +201,8 @@ export function RecipeModal({
             const data = await res.json();
 
             if (data.hybridGraph) {
-                setName(data.hybridGraph.title);
-                setImage(data.hybridGraph.image);
+                setName(data.hybridGraph.title || "");
+                setImage(data.hybridGraph.image || "");
             }
         } catch (err) {
             console.error(err);
