@@ -1,16 +1,27 @@
 import { useState, useMemo } from 'react';
 import { Header } from './components/Header';
-import { ActionBar } from './components/ActionBar';
+import { ActionBar, type SortOrder } from './components/ActionBar';
 import { TagManager } from './components/TagManager';
 import { RecipeCard } from './components/RecipeCard';
 import { RecipeModal } from './components/RecipeModal';
 import { useRecipeStore } from './hooks/useRecipeStore';
 import { Recipe, Tag } from './types';
 
+const SORT_KEY = 'recipebook_sort';
+
 function App() {
   const { recipes, tags, addRecipe, updateRecipe, deleteRecipe, addTag, deleteTag } = useRecipeStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [sortOrder, setSortOrder] = useState<SortOrder>(() => {
+    const stored = localStorage.getItem(SORT_KEY);
+    return (stored as SortOrder) || 'newest';
+  });
+
+  const handleSortChange = (order: SortOrder) => {
+    setSortOrder(order);
+    localStorage.setItem(SORT_KEY, order);
+  };
   const [isRecipeModalOpen, setIsRecipeModalOpen] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
 
@@ -33,7 +44,7 @@ function App() {
   };
 
   const filteredRecipes = useMemo(() => {
-    return recipes.filter(recipe => {
+    const filtered = recipes.filter(recipe => {
       // 1. Search Query
       if (searchQuery) {
         if (!recipe.name.toLowerCase().includes(searchQuery.toLowerCase())) {
@@ -50,7 +61,17 @@ function App() {
       }
       return true;
     });
-  }, [recipes, searchQuery, selectedTags]);
+
+    return [...filtered].sort((a, b) => {
+      switch (sortOrder) {
+        case 'oldest': return a.createdAt - b.createdAt;
+        case 'az': return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+        case 'za': return b.name.toLowerCase().localeCompare(a.name.toLowerCase());
+        case 'newest':
+        default: return b.createdAt - a.createdAt;
+      }
+    });
+  }, [recipes, searchQuery, selectedTags, sortOrder]);
 
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-50 font-sans">
@@ -60,6 +81,8 @@ function App() {
         <ActionBar
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          sortOrder={sortOrder}
+          setSortOrder={handleSortChange}
           onAddRecipe={handleAddRecipe}
         />
 
