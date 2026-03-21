@@ -73,7 +73,7 @@ export function TagManager({
                         variant={isEditing ? "default" : "outline"}
                         size="sm"
                         onClick={() => setIsEditing(!isEditing)}
-                        className="gap-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                        className={`gap-2 transition-colors ${!isEditing ? "hover:bg-neutral-100 dark:hover:bg-neutral-800" : ""}`}
                     >
                         {isEditing ? <><Check className="w-4 h-4" /> Done Editing</> : <><Edit2 className="w-4 h-4" /> Manage Tags</>}
                     </Button>
