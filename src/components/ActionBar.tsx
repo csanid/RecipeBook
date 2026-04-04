@@ -1,7 +1,6 @@
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, ChevronDown } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { SelectRoot, SelectTrigger, SelectValue, SelectPopup, SelectItem } from "./ui/select";
 
 export type SortOrder = "newest" | "oldest" | "az" | "za";
 
@@ -35,20 +34,21 @@ export function ActionBar({ searchQuery, setSearchQuery, sortOrder, setSortOrder
                 />
             </div>
             <div className="flex w-full sm:w-auto items-center gap-3">
-                <SelectRoot value={sortOrder} onValueChange={(val) => val && setSortOrder(val as SortOrder)}>
-                    <SelectTrigger className="w-36" data-testid="sort-select">
-                        <SelectValue>
-                            {SORT_OPTIONS.find(opt => opt.value === sortOrder)?.label}
-                        </SelectValue>
-                    </SelectTrigger>
-                    <SelectPopup>
+                <div className="relative w-36">
+                    <select
+                        value={sortOrder}
+                        onChange={(e) => setSortOrder(e.target.value as SortOrder)}
+                        className="h-8 w-full appearance-none rounded-lg border border-input bg-transparent px-2.5 py-1 pr-7 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 cursor-pointer dark:bg-input/30"
+                        data-testid="sort-select"
+                    >
                         {SORT_OPTIONS.map((opt) => (
-                            <SelectItem key={opt.value} value={opt.value}>
+                            <option key={opt.value} value={opt.value}>
                                 {opt.label}
-                            </SelectItem>
+                            </option>
                         ))}
-                    </SelectPopup>
-                </SelectRoot>
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 opacity-50" />
+                </div>
                 <Button
                     onClick={onAddRecipe}
                     className="w-full sm:w-auto flex items-center gap-2"
