@@ -8,13 +8,17 @@ declare global {
       openAddRecipeModal(): Chainable<void>
       stubOpenGraphSuccess(): Chainable<void>
       stubOpenGraphError(): Chainable<void>
+      selectSortOption(label: string): Chainable<void>
+      getCardNames(): Chainable<string[]>
     }
   }
 }
 
 // Loads an array of recipes into localStorage under 'recipebook_recipes'
-Cypress.Commands.add('seedRecipes', (_recipes) => {
-  // TODO
+Cypress.Commands.add('seedRecipes', (recipes: object[]) => {
+  cy.window().then((win) => {
+    win.localStorage.setItem('recipebook_recipes', JSON.stringify(recipes))
+  })
 })
 
 // Loads an array of tags into localStorage under 'recipebook_tags'
@@ -28,6 +32,18 @@ Cypress.Commands.add('seedTags', (tags: string[]) => {
 Cypress.Commands.add('openAddRecipeModal', () => {
   cy.get('[data-testid="add-recipe-btn"]').click()
 })
+
+// Clicks the sort trigger and selects the option matching the given label
+Cypress.Commands.add('selectSortOption', (label: string) => {
+  cy.get('[data-testid="sort-select"]').select(label)
+})
+
+// Resolves to an array of visible recipe card name texts
+Cypress.Commands.add('getCardNames', () =>
+  cy.get('[data-testid="recipe-card-name"]').then(($els) =>
+    [...$els].map((el) => el.textContent?.trim() ?? '')
+  )
+)
 
 // TODO: Stubs the OpenGraph API with the opengraph.json success fixture
 Cypress.Commands.add('stubOpenGraphSuccess', () => {

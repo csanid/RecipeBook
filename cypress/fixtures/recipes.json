@@ -2,11 +2,11 @@
   {
     "id": "test-recipe-1",
     "createdAt": 1704067200000,
-    "name": "Spaghetti Carbonara",
-    "link": "https://example.com/carbonara",
-    "image": "https://example.com/carbonara.jpg",
-    "tags": ["Italian", "Pasta"],
-    "notes": "Classic Italian dish with eggs, guanciale and pecorino."
+    "name": "Chicken Stir Fry",
+    "link": "https://example.com/chicken-stir-fry",
+    "image": "https://example.com/chicken-stir-fry.jpg",
+    "tags": ["Quick", "Asian"],
+    "notes": "Asian-inspired chicken stir fry"
   },
   {
     "id": "test-recipe-2",

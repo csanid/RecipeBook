@@ -27,7 +27,7 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
                 )}
             </div>
             <CardContent className="p-4">
-                <h3 className="font-semibold text-lg line-clamp-1 mb-2" title={recipe.name}>
+                <h3 className="font-semibold text-lg line-clamp-1 mb-2" title={recipe.name} data-testid="recipe-card-name">
                     {recipe.name}
                 </h3>
                 <div className="flex flex-wrap gap-1">

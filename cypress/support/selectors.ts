@@ -19,6 +19,8 @@ export const SELECTORS = {
   },
   recipeGrid: {
     card: '[data-testid="recipe-card"]',
+    cardName: '[data-testid="recipe-card-name"]',
+    emptyState: '[data-testid="empty-state"]',
   },
   recipeModal: {
     saveBtn: '[data-testid="modal-save-btn"]',
