@@ -11,6 +11,11 @@ export const SELECTORS = {
     container: '[data-testid="tags-container"]',
     pill: '[data-testid="tag-pill"]',
     tagError: '[data-testid="tag-error"]',
+    tagInput: '[data-testid="tag-input"]',
+    tagEditBtn: '[data-testid="tag-edit-btn"]',
+    tagDeleteBtn: '[data-testid="tag-delete-btn"]',
+    deleteTagDialogConfirm: '[data-testid="delete-tag-dialog-confirm"]',
+    deleteTagDialogCancel: '[data-testid="delete-tag-dialog-cancel"]',
   },
   recipeGrid: {
     card: '[data-testid="recipe-card"]',

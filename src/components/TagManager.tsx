@@ -82,6 +82,7 @@ export function TagManager({
                         size="sm"
                         onClick={() => { setIsEditing(!isEditing); setTagError(""); setNewTagStr(""); }}
                         className={`gap-2 transition-colors ${!isEditing ? "hover:bg-neutral-100 dark:hover:bg-neutral-800" : ""}`}
+                        data-testid="tag-edit-btn"
                     >
                         {isEditing ? <><Check className="w-4 h-4" /> Done Editing</> : <><Edit2 className="w-4 h-4" /> Manage Tags</>}
                     </Button>
@@ -109,7 +110,7 @@ export function TagManager({
                                                 setTagToDelete(tag);
                                             }}
                                             className="ml-2 hover:bg-red-100 dark:hover:bg-red-900 rounded-full p-0.5 transition-colors"
-                                            data-testid="remove-tag-chip"
+                                            data-testid="tag-delete-btn"
                                         >
                                             <X className="w-3 h-3 text-neutral-500 hover:text-red-500" />
                                         </button>
@@ -130,6 +131,7 @@ export function TagManager({
                                 onChange={(e) => { setNewTagStr(e.target.value); setTagError(""); }}
                                 maxLength={40}
                                 className="h-9 w-40"
+                                data-testid="tag-input"
                             />
                             <Button type="submit" size="sm" variant="secondary" className="h-9 px-3">
                                 <Plus className="w-4 h-4" />
@@ -155,8 +157,8 @@ export function TagManager({
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={confirmDelete} className="bg-red-500 hover:bg-red-600">
+                        <AlertDialogCancel data-testid="delete-tag-dialog-cancel">Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={confirmDelete} className="bg-red-500 hover:bg-red-600" data-testid="delete-tag-dialog-confirm">
                             Delete Tag
                         </AlertDialogAction>
                     </AlertDialogFooter>

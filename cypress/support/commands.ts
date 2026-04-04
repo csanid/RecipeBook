@@ -12,19 +12,21 @@ declare global {
   }
 }
 
-// TODO: Loads an array of recipes into localStorage under 'recipebook_recipes'
+// Loads an array of recipes into localStorage under 'recipebook_recipes'
 Cypress.Commands.add('seedRecipes', (_recipes) => {
   // TODO
 })
 
-// TODO: Loads an array of tags into localStorage under 'recipebook_tags'
-Cypress.Commands.add('seedTags', (_tags) => {
-  // TODO
+// Loads an array of tags into localStorage under 'recipebook_tags'
+Cypress.Commands.add('seedTags', (tags: string[]) => {
+  cy.window().then((win) => {
+    win.localStorage.setItem('recipebook_tags', JSON.stringify(tags))
+  })
 })
 
-// TODO: Clicks the add-recipe-btn to open the Add Recipe modal
+// Clicks the add-recipe-btn to open the Add Recipe modal
 Cypress.Commands.add('openAddRecipeModal', () => {
-  // TODO
+  cy.get('[data-testid="add-recipe-btn"]').click()
 })
 
 // TODO: Stubs the OpenGraph API with the opengraph.json success fixture
