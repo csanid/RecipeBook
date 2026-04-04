@@ -48,7 +48,7 @@ export function TagManager({
     const handleAddTag = (e: React.FormEvent) => {
         e.preventDefault();
         if (!newTagStr.trim()) {
-            setTagError("Enter one or more words to save a tag.");
+            setTagError("Tags can't be empty");
             return;
         }
         if (tags.some(t => t.toLowerCase() === newTagStr.trim().toLowerCase())) {
