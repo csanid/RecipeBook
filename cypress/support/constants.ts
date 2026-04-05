@@ -1,4 +1,5 @@
 export const UPDATED_RECIPE_NAME = 'Updated Chicken Stir Fry'
+export const JOURNEY_TAG = 'Vegan'
 
 export const FIXTURE_TAGS = {
   first: 'Air fryer',
