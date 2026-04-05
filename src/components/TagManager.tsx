@@ -100,7 +100,7 @@ export function TagManager({
                                     variant={isSelected ? "default" : "secondary"}
                                     className={`text-sm py-1.5 px-3 cursor-pointer transition-all duration-200 shadow-sm ${!isEditing && !isSelected ? 'hover:bg-neutral-200 dark:hover:bg-neutral-800' : ''}`}
                                     onClick={() => toggleTagSelection(tag)}
-                                    data-testid="tag-pill"
+                                    data-testid={isEditing ? "tag-pill" : "tag-filter-pill"}
                                 >
                                     {tag}
                                     {isEditing && (

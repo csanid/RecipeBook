@@ -10,6 +10,7 @@ export const SELECTORS = {
   tagManager: {
     container: '[data-testid="tags-container"]',
     pill: '[data-testid="tag-pill"]',
+    filterPill: '[data-testid="tag-filter-pill"]',
     tagError: '[data-testid="tag-error"]',
     tagInput: '[data-testid="tag-input"]',
     tagEditBtn: '[data-testid="tag-edit-btn"]',
