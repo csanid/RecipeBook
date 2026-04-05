@@ -46,7 +46,7 @@ describe('Recipe Modal — Add Flow', () => {
   })
 
   context('OpenGraph autofill', () => {
-    it('shows a spinner while fetching and autofills name and image on success', () => {
+    it('shows a spinner while fetching', () => {
       cy.intercept('GET', '**/opengraph.io/api/**', {
         fixture: 'opengraph.json',
         delay: 300,
@@ -57,18 +57,16 @@ describe('Recipe Modal — Add Flow', () => {
         cy.get(SELECTORS.recipeModal.fetchOgBtn).find('[class*="animate-spin"]').should('exist')
         cy.wait('@ogDelayed')
         cy.get(SELECTORS.recipeModal.fetchOgBtn).find('[class*="animate-spin"]').should('not.exist')
-        cy.fixture('opengraph').then((og) => {
-          cy.get(SELECTORS.recipeModal.nameInput).should('have.value', og.hybridGraph.title)
-        })
       })
     })
 
-    it('shows the stubbed image in the modal image area after successful fetch', () => {
+    it('autofills name and image on successful fetch', () => {
       cy.fixture('recipes').then(([recipe]) => {
         cy.get(SELECTORS.recipeModal.linkInput).type(recipe.link)
         cy.get(SELECTORS.recipeModal.fetchOgBtn).click()
         cy.wait('@ogSuccess')
         cy.fixture('opengraph').then((og) => {
+          cy.get(SELECTORS.recipeModal.nameInput).should('have.value', og.hybridGraph.title)
           cy.get(SELECTORS.recipeModal.modalImage).should('have.attr', 'src', og.hybridGraph.image)
         })
       })
