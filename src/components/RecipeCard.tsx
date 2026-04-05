@@ -21,9 +21,10 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
                         src={recipe.image}
                         alt={recipe.name}
                         className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                        data-testid="recipe-card-image"
                     />
                 ) : (
-                    <ImageIcon className="w-10 h-10 text-neutral-300 dark:text-neutral-700" />
+                    <ImageIcon className="w-10 h-10 text-neutral-300 dark:text-neutral-700" data-testid="recipe-card-image-placeholder" />
                 )}
             </div>
             <CardContent className="p-4">
@@ -33,7 +34,7 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
                 <div className="flex flex-wrap gap-1">
                     {recipe.tags && recipe.tags.length > 0 ? (
                         recipe.tags.slice(0, 3).map(tag => (
-                            <Badge key={tag} variant="secondary" className="text-xs px-2 py-0">
+                            <Badge key={tag} variant="secondary" className="text-xs px-2 py-0" data-testid="recipe-card-tag">
                                 {tag}
                             </Badge>
                         ))

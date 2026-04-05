@@ -247,6 +247,7 @@ export function RecipeModal({
                                         variant="secondary"
                                         onClick={(e) => { e.stopPropagation(); handleCloseAttempt(); }}
                                         className="rounded-full shadow-md bg-white/80 dark:bg-black/80 hover:bg-white dark:hover:bg-black text-neutral-900 dark:text-neutral-100 backdrop-blur-sm"
+                                        data-testid="modal-view-close-btn"
                                     >
                                         <X className="w-4 h-4" />
                                     </Button>
@@ -331,7 +332,7 @@ export function RecipeModal({
                                         </>
                                     ) : (
                                         link && (
-                                            <a href={link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:underline font-medium">
+                                            <a href={link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:underline font-medium" data-testid="modal-recipe-link">
                                                 <LinkIcon className="w-4 h-4" /> Visit Original Recipe
                                             </a>
                                         )

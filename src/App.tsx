@@ -105,7 +105,7 @@ function App() {
             ))}
           </div>
         ) : (
-          <div className="py-16 text-center text-muted-foreground border-2 border-dashed rounded-xl" data-testid="empty-state">
+          <div className="py-16 text-center text-muted-foreground border-2 border-dashed rounded-xl" data-testid="empty-grid-state">
             <h3 className="text-lg font-medium mb-1">No recipes found</h3>
             <p className="text-sm">Try adjusting your search or filters, or add a new recipe.</p>
           </div>

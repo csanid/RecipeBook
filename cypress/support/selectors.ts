@@ -21,7 +21,10 @@ export const SELECTORS = {
   recipeGrid: {
     card: '[data-testid="recipe-card"]',
     cardName: '[data-testid="recipe-card-name"]',
-    emptyState: '[data-testid="empty-state"]',
+    cardTag: '[data-testid="recipe-card-tag"]',
+    cardImage: '[data-testid="recipe-card-image"]',
+    cardImagePlaceholder: '[data-testid="recipe-card-image-placeholder"]',
+    emptyState: '[data-testid="empty-grid-state"]',
   },
   recipeModal: {
     saveBtn: '[data-testid="modal-save-btn"]',
@@ -30,6 +33,8 @@ export const SELECTORS = {
     deleteBtn: '[data-testid="modal-delete-btn"]',
     fetchOgBtn: '[data-testid="fetch-og-btn"]',
     modalOverlay: '[data-slot="dialog-overlay"]',
+    viewCloseBtn: '[data-testid="modal-view-close-btn"]',
+    recipeLink: '[data-testid="modal-recipe-link"]',
     nameInput: '[data-testid="recipe-name-input"]',
     linkInput: '[data-testid="recipe-link-input"]',
     imageInput: '[data-testid="recipe-image-input"]',
