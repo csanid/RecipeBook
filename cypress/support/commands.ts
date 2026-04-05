@@ -45,14 +45,14 @@ Cypress.Commands.add('getCardNames', () =>
   )
 )
 
-// TODO: Stubs the OpenGraph API with the opengraph.json success fixture
+// Intercepts the OpenGraph API and stubs a successful response
 Cypress.Commands.add('stubOpenGraphSuccess', () => {
-  // TODO
+  cy.intercept('GET', '**/opengraph.io/api/**', { fixture: 'opengraph.json' }).as('ogSuccess')
 })
 
-// TODO: Stubs the OpenGraph API with a 500 error using opengraph-error.json
+// Intercepts the OpenGraph API and stubs a 500 error response
 Cypress.Commands.add('stubOpenGraphError', () => {
-  // TODO
+  cy.intercept('GET', '**/opengraph.io/api/**', { statusCode: 500, fixture: 'opengraph-error.json' }).as('ogError')
 })
 
 export {}

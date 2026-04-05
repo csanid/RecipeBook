@@ -225,9 +225,10 @@ export function RecipeModal({
                                     alt={name || 'Recipe'}
                                     className="w-full h-full object-cover"
                                     onError={() => setImageLoadFailed(true)}
+                                    data-testid="modal-image"
                                 />
                             ) : (
-                                <ImageIcon className="w-12 h-12 text-neutral-300 dark:text-neutral-700" />
+                                <ImageIcon className="w-12 h-12 text-neutral-300 dark:text-neutral-700" data-testid="modal-image-placeholder" />
                             )}
 
                             {!isEditMode && (
@@ -278,6 +279,7 @@ export function RecipeModal({
                                                 placeholder="e.g. Grandma's Apple Pie"
                                                 maxLength={80}
                                                 className="text-lg font-semibold"
+                                                data-testid="recipe-name-input"
                                             />
                                         </div>
                                     ) : (
@@ -300,6 +302,7 @@ export function RecipeModal({
                                                     }}
                                                     placeholder="https://..."
                                                     className="pl-9 pr-10"
+                                                    data-testid="recipe-link-input"
                                                 />
                                                 <Button
                                                     size="icon-sm"
@@ -348,6 +351,7 @@ export function RecipeModal({
                                                 }}
                                                 placeholder="https://.../image.jpg"
                                                 className="pl-9"
+                                                data-testid="recipe-image-input"
                                             />
                                         </div>
                                         {imageUrlError && (
@@ -372,6 +376,7 @@ export function RecipeModal({
                                                 maxLength={40}
                                                 placeholder="Type a tag and press Enter..."
                                                 className="h-9"
+                                                data-testid="tag-input"
                                             />
                                             {tagError ? (
                                                 <p className="text-sm text-destructive flex items-center gap-1.5 mt-1" data-testid="modal-tag-error">
@@ -402,6 +407,7 @@ export function RecipeModal({
                                                             <button
                                                                 className="hover:bg-neutral-600 dark:hover:bg-neutral-300 rounded-full p-0.5 inline-flex"
                                                                 onClick={(e) => { e.stopPropagation(); toggleTag(tag); }}
+                                                                data-testid="remove-tag-chip"
                                                             >
                                                                 <X className="w-3 h-3" />
                                                             </button>
@@ -450,6 +456,7 @@ export function RecipeModal({
                                                 value={notes}
                                                 onChange={(e) => setNotes(e.target.value)}
                                                 maxLength={2500}
+                                                data-testid="recipe-notes-input"
                                             />
                                         </>
                                     ) : (
@@ -475,7 +482,7 @@ export function RecipeModal({
                                         </Button>
                                     ) : <div></div>}
                                     <div className="flex gap-2">
-                                        <Button variant="outline" onClick={handleCloseAttempt}>Cancel</Button>
+                                        <Button variant="outline" onClick={handleCloseAttempt} data-testid="modal-cancel-btn">Cancel</Button>
                                         <Button onClick={handleSave} className="gap-2" data-testid="modal-save-btn">
                                             <Check className="w-4 h-4" /> Save Recipe
                                         </Button>
@@ -496,8 +503,8 @@ export function RecipeModal({
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setShowUnsavedDialog(false)}>Keep Editing</AlertDialogCancel>
-                        <AlertDialogAction onClick={confirmClose} className="bg-red-500 hover:bg-red-600">
+                        <AlertDialogCancel onClick={() => setShowUnsavedDialog(false)} data-testid="unsaved-changes-cancel">Keep Editing</AlertDialogCancel>
+                        <AlertDialogAction onClick={confirmClose} className="bg-red-500 hover:bg-red-600" data-testid="unsaved-changes-confirm">
                             Discard Changes
                         </AlertDialogAction>
                     </AlertDialogFooter>
