@@ -1,4 +1,5 @@
 import { SELECTORS } from '../support/selectors'
+import { FIXTURE_TAGS } from '../support/constants'
 
 describe('Tag Management', () => {
   context('Adding tags', () => {
@@ -62,6 +63,30 @@ describe('Tag Management', () => {
       cy.get(SELECTORS.tagManager.tagDeleteBtn).first().click()
       cy.get(SELECTORS.tagManager.deleteTagDialogCancel).click()
       cy.get(SELECTORS.tagManager.pill).should('have.length', 2)
+    })
+  })
+
+  context('Deleting a tag used in recipes', () => {
+      beforeEach(() => {
+        cy.visit('/')
+        cy.fixture('tags').then((tags: string[]) => cy.seedTags(tags))
+        cy.seedRecipes([{
+          id: 'tagged-recipe',
+          createdAt: 1704067200000,
+          name: 'Tagged Recipe',
+          tags: [FIXTURE_TAGS.first],
+        }])
+        cy.reload()
+      })
+
+    it('removes the tag from all associated recipes', () => {
+      cy.get(SELECTORS.tagManager.tagEditBtn).click()
+      cy.get(SELECTORS.tagManager.tagDeleteBtn).first().click()
+      cy.get(SELECTORS.tagManager.deleteTagDialogConfirm).click()
+      cy.window().then((win) => {
+        const recipes = JSON.parse(win.localStorage.getItem('recipebook_recipes') ?? '[]')
+        expect(recipes[0].tags).not.to.include(FIXTURE_TAGS.first)
+      })
     })
   })
 
