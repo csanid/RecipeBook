@@ -238,6 +238,7 @@ export function RecipeModal({
                                         variant="secondary"
                                         onClick={(e) => { e.stopPropagation(); setIsEditMode(true); }}
                                         className="rounded-full shadow-md bg-white/80 dark:bg-black/80 hover:bg-white dark:hover:bg-black text-neutral-900 dark:text-neutral-100 backdrop-blur-sm"
+                                        data-testid="recipe-card-edit-btn"
                                     >
                                         <Edit2 className="w-4 h-4" />
                                     </Button>
@@ -477,7 +478,7 @@ export function RecipeModal({
                             {isEditMode && (
                                 <div className="flex justify-between items-center mt-8 pt-4 border-t">
                                     {recipe && !isAddMode ? (
-                                        <Button variant="destructive" onClick={() => setShowDeleteDialog(true)} className="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900 border-red-200 dark:border-red-900">
+                                        <Button variant="destructive" onClick={() => setShowDeleteDialog(true)} className="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900 border-red-200 dark:border-red-900" data-testid="modal-delete-btn">
                                             Delete Recipe
                                         </Button>
                                     ) : <div></div>}
@@ -495,7 +496,7 @@ export function RecipeModal({
             </Dialog>
 
             <AlertDialog open={showUnsavedDialog} onOpenChange={setShowUnsavedDialog}>
-                <AlertDialogContent>
+                <AlertDialogContent data-testid="discard-changes-dialog">
                     <AlertDialogHeader>
                         <AlertDialogTitle>Discard unsaved changes?</AlertDialogTitle>
                         <AlertDialogDescription>
@@ -519,8 +520,8 @@ export function RecipeModal({
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setShowDeleteDialog(false)}>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => { onDelete(recipe!.id); setShowDeleteDialog(false); onClose(); }} className="bg-red-500 hover:bg-red-600">
+                        <AlertDialogCancel onClick={() => setShowDeleteDialog(false)} data-testid="delete-cancel-btn">Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => { onDelete(recipe!.id); setShowDeleteDialog(false); onClose(); }} className="bg-red-500 hover:bg-red-600" data-testid="delete-confirm-btn">
                             Delete Recipe
                         </AlertDialogAction>
                     </AlertDialogFooter>

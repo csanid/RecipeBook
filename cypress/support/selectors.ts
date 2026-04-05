@@ -25,7 +25,10 @@ export const SELECTORS = {
   recipeModal: {
     saveBtn: '[data-testid="modal-save-btn"]',
     cancelBtn: '[data-testid="modal-cancel-btn"]',
+    editBtn: '[data-testid="recipe-card-edit-btn"]',
+    deleteBtn: '[data-testid="modal-delete-btn"]',
     fetchOgBtn: '[data-testid="fetch-og-btn"]',
+    modalOverlay: '[data-slot="dialog-overlay"]',
     nameInput: '[data-testid="recipe-name-input"]',
     linkInput: '[data-testid="recipe-link-input"]',
     imageInput: '[data-testid="recipe-image-input"]',
@@ -40,5 +43,10 @@ export const SELECTORS = {
     ogError: '[data-testid="error-message"]',
     unsavedChangesConfirmDiscard: '[data-testid="unsaved-changes-confirm"]',
     unsavedChangesCancelDiscard: '[data-testid="unsaved-changes-cancel"]',
+    discardChangesDialog: '[data-testid="discard-changes-dialog"]',
+    discardChangesConfirmBtn: '[data-testid="unsaved-changes-confirm"]',
+    keepEditingBtn: '[data-testid="unsaved-changes-cancel"]',
+    deleteConfirmBtn: '[data-testid="delete-confirm-btn"]',
+    deleteCancelBtn: '[data-testid="delete-cancel-btn"]',
   },
 } as const

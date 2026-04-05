@@ -1,3 +1,5 @@
+export const UPDATED_RECIPE_NAME = 'Updated Chicken Stir Fry'
+
 export const FIXTURE_TAGS = {
   first: 'Air fryer',
   second: 'Easy dinners',
