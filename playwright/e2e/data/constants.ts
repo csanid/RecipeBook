@@ -1,0 +1,14 @@
+export const UPDATED_RECIPE_NAME = 'Updated Chicken Stir Fry'
+export const JOURNEY_TAG = 'Vegan'
+
+export const FIXTURE_TAGS = {
+  first: 'Air fryer',
+  second: 'Easy dinners',
+} as const
+
+export const SORT_LABELS = {
+  newest: 'Newest first',
+  oldest: 'Oldest first',
+  az: 'A–Z',
+  za: 'Z–A',
+} as const

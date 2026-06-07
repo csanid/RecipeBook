@@ -1,7 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures'
 
-test('loads the Recipe Book page', async ({ page }) => {
-  await page.goto('/');
-
-  await expect(page.getByRole('heading', { name: 'My Recipe Book' })).toBeVisible();
-});
+test('loads the Recipe Book page', async ({ recipeBookPage }) => {
+  await recipeBookPage.goto()
+  await expect(recipeBookPage.heading()).toBeVisible()
+})
