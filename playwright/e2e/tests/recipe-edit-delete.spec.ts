@@ -10,7 +10,7 @@ const RECIPE = makeRecipe({
   notes: 'Asian-inspired chicken stir fry',
 })
 
-test.use({ recipes: [RECIPE] })
+test.use({ recipes: { items: [RECIPE] } })
 
 test.describe('Edit and Delete Recipes', () => {
   test.beforeEach(async ({ recipeBookPage }) => {

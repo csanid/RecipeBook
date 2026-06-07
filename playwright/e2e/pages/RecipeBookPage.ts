@@ -27,12 +27,16 @@ export class RecipeBookPage {
     await this.page.getByRole('button', { name: 'Add Recipe' }).click()
   }
 
-  // No accessible label — fallback to testid
+  // No accessible label — fall back to testid
   searchInput(): Locator {
     return this.page.getByTestId('search-bar')
   }
 
+  sortSelect(): Locator {
+    return this.page.getByTestId('sort-select')
+  }
+
   async selectSort(label: string): Promise<void> {
-    await this.page.getByTestId('sort-select').selectOption(label)
+    await this.sortSelect().selectOption(label)
   }
 }

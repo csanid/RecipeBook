@@ -17,8 +17,12 @@ type OgFixture = {
 }
 
 type TestFixtures = {
-  /** Seed recipes written to localStorage before navigation. Default: []. */
-  recipes: Recipe[]
+  // Wrapped in an object to avoid Playwright's fixture-tuple detection: test.use resolver
+  // interprets any array with 2+ elements whose second item is a plain object as a
+  // [value, options] fixture-definition tuple, silently unwrapping it to value[0].
+  // A plain {items} object is never mistaken for a tuple or a fixture function.
+  /** Recipes to seed into localStorage before navigation. Default: { items: [] }. */
+  recipes: { items: Recipe[] }
   /** Seed tags written to localStorage before navigation. Default: []. */
   tags: string[]
   recipeBookPage: RecipeBookPage
@@ -30,7 +34,7 @@ type TestFixtures = {
 }
 
 export const test = base.extend<TestFixtures>({
-  recipes: [[], { option: true }],
+  recipes: [{ items: [] }, { option: true }],
   tags: [[], { option: true }],
 
   recipeBookPage: async ({ page, recipes, tags }, use) => {
@@ -40,7 +44,7 @@ export const test = base.extend<TestFixtures>({
         localStorage.setItem('recipebook_recipes', JSON.stringify(seed.r))
         localStorage.setItem('recipebook_tags', JSON.stringify(seed.t))
       },
-      { r: recipes, t: tags },
+      { r: recipes.items, t: tags },
     )
     await use(new RecipeBookPage(page))
   },

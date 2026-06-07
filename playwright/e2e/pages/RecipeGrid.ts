@@ -20,6 +20,11 @@ export class RecipeGrid {
     return texts.map((t) => t.trim())
   }
 
+  // Use with toHaveText([...]) for auto-waiting order / count assertions
+  cardNames(): Locator {
+    return this.page.getByTestId('recipe-card-name')
+  }
+
   cardImage(withinCard?: Locator): Locator {
     if (withinCard) return withinCard.getByTestId('recipe-card-image')
     return this.page.getByTestId('recipe-card-image')
