@@ -12,6 +12,8 @@ type OgFixture = {
   success: () => Promise<void>
   error: () => Promise<void>
   noTitle: () => Promise<void>
+  /** Fulfills after `delayMs` ms — use this to observe the spinner before the response arrives. */
+  successDelayed: (delayMs?: number) => Promise<void>
 }
 
 type TestFixtures = {
@@ -63,6 +65,11 @@ export const test = base.extend<TestFixtures>({
         page.route(OG_URL, (route) => route.fulfill({ status: 500, json: OG_ERROR })),
       noTitle: () =>
         page.route(OG_URL, (route) => route.fulfill({ json: OG_NO_TITLE })),
+      successDelayed: (delayMs = 800) =>
+        page.route(OG_URL, async (route) => {
+          await new Promise<void>((resolve) => setTimeout(resolve, delayMs))
+          await route.fulfill({ json: OG_SUCCESS })
+        }),
     })
   },
 })

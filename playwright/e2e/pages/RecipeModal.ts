@@ -40,4 +40,12 @@ export class RecipeModal {
   // Delete-recipe confirmation dialog
   confirmDelete(): Locator { return this.page.getByTestId('delete-confirm-btn') }
   cancelDelete(): Locator { return this.page.getByTestId('delete-cancel-btn') }
+
+  // Spinner inside the fetch-OG button: present only while a fetch is in process
+  fetchOgSpinner(): Locator { return this.fetchOgBtn().locator('.animate-spin') }
+
+  // An unselected tag suggestion in the tag editor, rendered as "+ TagName"
+  tagSuggestion(name: string): Locator {
+    return this.page.getByRole('dialog').getByText(`+ ${name}`)
+  }
 }
