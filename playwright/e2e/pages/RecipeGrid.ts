@@ -35,6 +35,10 @@ export class RecipeGrid {
     return this.page.getByTestId('recipe-card-image-placeholder')
   }
 
+  cardTags(withinCard: Locator): Locator {
+    return withinCard.getByTestId('recipe-card-tag')
+  }
+
   emptyState(): Locator {
     return this.page.getByTestId('empty-grid-state')
   }

@@ -21,6 +21,15 @@ export class TagManager {
   // Delete X buttons, one per pill in edit mode
   deleteButtons(): Locator { return this.page.getByTestId('tag-delete-btn') }
 
+  filterPillByName(name: string): Locator { return this.filterPills().filter({ hasText: name }) }
+  pillByName(name: string): Locator { return this.pills().filter({ hasText: name }) }
+  deleteButtonFor(name: string): Locator { return this.pillByName(name).getByTestId('tag-delete-btn') }
+
+  async addTag(name: string): Promise<void> {
+    await this.tagInput().fill(name)
+    await this.tagInput().press('Enter')
+  }
+
   // Delete-tag confirmation dialog
   deleteTagDialogConfirm(): Locator { return this.page.getByTestId('delete-tag-dialog-confirm') }
   deleteTagDialogCancel(): Locator { return this.page.getByTestId('delete-tag-dialog-cancel') }
